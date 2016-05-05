@@ -103,8 +103,8 @@
 			parsed.connect = 3;
 		} else if ( entry === false ) {
 			parsed.connect = 0;
-		} else if (parsed.handles > 2) {
-			throw new Error("noUiSlider: 'connect' option does not support sliders with more than two handles.");
+		} else if ( entry.constructor === Array && entry.length == parsed.handles + 1 ) {
+			parsed.connect = entry;
 		} else {
 			throw new Error("noUiSlider: 'connect' option doesn't match handle count.");
 		}
