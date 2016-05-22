@@ -72,17 +72,15 @@
 	// Add the proper connection classes.
 	function addConnection ( connect, target, handles ) {
 
-		var tmpConnect = connect;
-
 		// Apply the required connection classes to the elements
 		// that need them. Some classes are made up for several
 		// segments listed in the class list, to allow easy
 		// renaming and provide a minor compression benefit.
 
 		// If 'connect' is an array.
-		if ( tmpConnect.constructor === Array ) {
+		if ( connect.constructor === Array ) {
 			// The first element defines the target's connection (the connection from the start to the first handle).
-			var hasConnection = tmpConnect.shift();
+			var hasConnection = connect[0];
 			// 'false' indicates no connection.
 			if ( hasConnection === false ) {
 				addClass( target, options.cssClasses.background );
@@ -96,9 +94,10 @@
 				}
 			}
 			// Iterate all handles.
+			var i = 1;
 			handles.forEach(function(handle) {
-				// Get the value at the front. This defines the connection from this handle to the next handle or the end.
-				hasConnection = tmpConnect.shift();
+				// Get the value at the current position. This defines the connection from this handle to the next handle or the end.
+				hasConnection = connect[i];
 				if ( hasConnection === false ) {
 					addClass( handle, options.cssClasses.background );
 				}
@@ -108,21 +107,22 @@
 						handle.style.backgroundColor = hasConnection;
 					}
 				}
+				i++;
 			});
-			// Return from the function, since the rest of the function handles the case that 'connect' is not an array.
-			return;
 		}
-
-		switch ( connect ) {
-			case 1:	addClass(target, options.cssClasses.connect);
+		// 'connect' is not an array.
+		else {
+			switch ( connect ) {
+				case 1:	addClass(target, options.cssClasses.connect);
 					addClass(handles[0], options.cssClasses.background);
 					break;
-			case 3: addClass(handles[1], options.cssClasses.background);
+				case 3: addClass(handles[1], options.cssClasses.background);
 					/* falls through */
-			case 2: addClass(handles[0], options.cssClasses.connect);
+				case 2: addClass(handles[0], options.cssClasses.connect);
 					/* falls through */
-			case 0: addClass(target, options.cssClasses.background);
+				case 0: addClass(target, options.cssClasses.background);
 					break;
+			}
 		}
 	}
 
