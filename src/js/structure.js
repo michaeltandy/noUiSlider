@@ -76,16 +76,53 @@
 		// that need them. Some classes are made up for several
 		// segments listed in the class list, to allow easy
 		// renaming and provide a minor compression benefit.
-		switch ( connect ) {
-			case 1:	addClass(target, options.cssClasses.connect);
+
+		// If 'connect' is an array.
+		if ( connect.constructor === Array ) {
+			// The first element defines the target's connection (the connection from the start to the first handle).
+			var hasConnection = connect[0];
+			// 'false' indicates no connection.
+			if ( hasConnection === false ) {
+				addClass( target, options.cssClasses.background );
+			}
+			// 'true' or some color code indicate connection.
+			else {
+				addClass( target, options.cssClasses.connect );
+				// If it is not 'true', then it is used as a color for the background.
+				if ( hasConnection !== true ) {
+					target.style.backgroundColor = hasConnection;
+				}
+			}
+			// Iterate all handles.
+			var i = 1;
+			handles.forEach(function(handle) {
+				// Get the value at the current position. This defines the connection from this handle to the next handle or the end.
+				hasConnection = connect[i];
+				if ( hasConnection === false ) {
+					addClass( handle, options.cssClasses.background );
+				}
+				else {
+					addClass( handle, options.cssClasses.connect );
+					if ( hasConnection !== true ) {
+						handle.style.backgroundColor = hasConnection;
+					}
+				}
+				i++;
+			});
+		}
+		// 'connect' is not an array.
+		else {
+			switch ( connect ) {
+				case 1:	addClass(target, options.cssClasses.connect);
 					addClass(handles[0], options.cssClasses.background);
 					break;
-			case 3: addClass(handles[1], options.cssClasses.background);
+				case 3: addClass(handles[1], options.cssClasses.background);
 					/* falls through */
-			case 2: addClass(handles[0], options.cssClasses.connect);
+				case 2: addClass(handles[0], options.cssClasses.connect);
 					/* falls through */
-			case 0: addClass(target, options.cssClasses.background);
+				case 0: addClass(target, options.cssClasses.background);
 					break;
+			}
 		}
 	}
 
